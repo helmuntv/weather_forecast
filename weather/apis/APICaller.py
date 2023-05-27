@@ -1,8 +1,9 @@
-import requests
+import httpx
 
 class APICaller:
 
-    def api_call_get(url, query_params):
-        url = url + query_params
-        response = requests.get(url)
-        return response
+    async def api_call_get(url, query_params):
+        async with httpx.AsyncClient() as client:
+            url = url + query_params
+            response = await client.get(url)
+            return response
