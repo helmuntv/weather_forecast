@@ -1,28 +1,61 @@
+{% load static tailwind_tags %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weather forecast</title>
+    {% tailwind_css %}
     <script src="https://unpkg.com/htmx.org@1.4.1"></script>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
 </head>
 <body>
-  <div id="weather-info" hx-swap="outerHTML">
-    <form hx-post="{% url 'index' %}" hx-target="#weather-info">
-      {% csrf_token %}
-      <input type="text" name="city" placeholder="Search city" required>
-      <button type="submit">Search</button>
-    </form>    
-  
-    {% if error_message %}
-      <p>{{ error_message }}</p>
-    {% else %}
-      <h1>Weather information for {{ city }}</h1>
-      <p>Conditions: {{ description }}</p>
-      <p>Temperature: {{ temperature }}</p>
-      <p>Humidity: {{ humidity }}</p>
-      <p>Wind speed: {{ wind_speed }}</p>
-    {% endif %}
+  <div id="weather-info" hx-swap="outerHTML">  
+    <h1 class="text-gray-700 text-2xl font-bold md:text-gray-700 mx-auto flex justify-center" hx-swap="outerHTML">Weather forecast</h1>
+    <div class="flex flex-col max-w-4xl md:h-76 bg-white rounded-lg shadow-lg overflow-hidden md:flex-row my-10">
+      {% if error_message %}
+        <div class="md:flex items-center justify-center md:w-1/2 md:bg-gray-700">
+          <div class="py-6 px-8 md:py-0">
+              <p class="mt-2 text-gray-600 md:text-gray-400">{{ error_message }}</p>
+          </div>
+        </div> 
+      {% else %}
+        <div class="md:flex items-center justify-center md:w-1/2 md:bg-gray-700 py-6">
+            <div class="py-6 px-8 md:py-0">
+              
+              <img src={{ icon }} class="w-24 h-24 mx-auto">
+              
+              <h1 class="text-gray-700 text-2xl font-bold md:text-gray-100 mx-auto flex justify-center">{{ city }}</h1>
+
+              <p class="flex items-center mt-2 text-gray-600 md:text-gray-100 flex items-center">
+                <i class='far fa-sun text-2xl mx-auto'></i>
+                <span class="block mx-auto">{{ description }}</span>
+              </p>
+              <p class="flex items-center mt-2 text-gray-600 md:text-gray-100 flex items-center">
+                <i class="fas fa-temperature-low text-2xl mx-auto"></i>
+                <span class="block mx-auto">{{ temperature }} °C</span>
+              </p>
+              <p class="flex items-center mt-2 text-gray-600 md:text-gray-100 flex items-center">
+                <i class='fas fa-water text-2xl mx-auto'></i>
+                <span class="block mx-auto">{{ humidity }} %</span>
+              </p>
+              <p class="flex items-center mt-2 text-gray-600 md:text-gray-100 flex items-center">
+                <i class='fas fa-wind text-2xl mx-auto'></i>
+                <span class="block mx-auto">{{ wind_speed }} Km/h</span>
+              </p>
+            </div>
+        </div>
+      {% endif %}
+      <div class="flex items-center justify-center pb-6 md:py-0 md:w-1/2 md:border-b-8 border-gray-700">
+          <form hx-post="{% url 'index' %}" hx-target="#weather-info">
+            {% csrf_token %}
+              <div class="flex flex-col rounded-lg overflow-hidden sm:flex-row">
+                <input class="py-3 px-4 bg-gray-200 text-gray-800 border-gray-300 border-2 outline-none placeholder-gray-500 focus:bg-gray-100" type="text" name="city" placeholder="Search city" required>
+                <button class="py-3 px-4 bg-gray-700 text-gray-100 font-semibold hover:bg-gray-600" type="submit">Search</button>
+              </div>
+          </form>
+      </div>
+    </div>
   </div>
 </body>
 </html>
